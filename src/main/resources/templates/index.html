@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>File Sharing Application</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --dark-bg: #121212;
+            --dark-card: #1e1e1e;
+            --dark-hover: #2d2d2d;
+            --accent-color: #6c5ce7;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-color: #333333;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .card {
+            background-color: var(--dark-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .table {
+            color: var(--text-primary);
+        }
+        
+        .table thead th {
+            background-color: var(--dark-hover);
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 500;
+        }
+        
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: var(--dark-hover);
+        }
+        
+        .table td {
+            border-color: var(--border-color);
+            vertical-align: middle;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5b4bc4;
+            border-color: #5b4bc4;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background-color: #00b894;
+            border-color: #00b894;
+            border-radius: 8px;
+        }
+        
+        .btn-danger {
+            background-color: #d63031;
+            border-color: #d63031;
+            border-radius: 8px;
+        }
+        
+        .form-control {
+            background-color: var(--dark-hover);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+        
+        .form-control:focus {
+            background-color: var(--dark-hover);
+            border-color: var(--accent-color);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+        }
+        
+        .alert-success {
+            background-color: rgba(0, 184, 148, 0.2);
+            color: #00b894;
+        }
+        
+        .alert-danger {
+            background-color: rgba(214, 48, 49, 0.2);
+            color: #d63031;
+        }
+        
+        .alert-info {
+            background-color: rgba(108, 92, 231, 0.2);
+            color: var(--accent-color);
+        }
+        
+        .app-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--accent-color), #00b894);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+        
+        .file-icon {
+            margin-right: 8px;
+            color: var(--accent-color);
+        }
+        
+        .upload-icon {
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+        
+        .btn-group .btn {
+            margin: 0 2px;
+        }
+        
+        .file-size {
+            color: var(--text-secondary);
+        }
+        
+        .upload-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="container py-5">
+    <h1 class="app-title">File Sharing Application</h1>
+
+    <!-- Alert Messages -->
+    <div th:if="${message}" class="alert alert-success" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span th:text="${message}"></span>
+    </div>
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">
+                <i class="bi bi-cloud-upload upload-icon"></i>
+                Upload New File
+            </h5>
+            <form method="POST" action="/upload" enctype="multipart/form-data" class="mb-3">
+                <div class="mb-3">
+                    <input type="file" class="form-control" name="file" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-upload me-2"></i>Upload
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Files List -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">
+                <i class="bi bi-files upload-icon"></i>
+                Uploaded Files
+            </h5>
+            <div class="table-responsive">
+                <table class="table" th:if="${not #lists.isEmpty(files)}">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Size</th>
+                            <th>Uploaded By</th>
+                            <th>Upload Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="file : ${files}">
+                            <td>
+                                <i class="bi bi-file-earmark file-icon"></i>
+                                <span th:text="${file.fileName}"></span>
+                            </td>
+                            <td class="file-size" th:text="${#numbers.formatDecimal(file.fileSize/1024, 0, 2) + ' KB'}"></td>
+                            <td th:text="${file.uploadedBy}"></td>
+                            <td class="upload-date" th:text="${#temporals.format(file.uploadDateTime, 'dd-MM-yyyy HH:mm')}"></td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a th:href="@{/download/{id}(id=${file.id})}" 
+                                       class="btn btn-sm btn-success">
+                                        <i class="bi bi-download me-1"></i>Download
+                                    </a>
+                                    <form th:action="@{/delete/{id}(id=${file.id})}" 
+                                          method="POST" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash me-1"></i>Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div th:if="${#lists.isEmpty(files)}" class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    No files have been uploaded yet.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

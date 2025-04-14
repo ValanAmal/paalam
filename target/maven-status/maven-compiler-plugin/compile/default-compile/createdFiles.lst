@@ -1,0 +1,5 @@
+com/example/filesharing/repository/FileRepository.class
+com/example/filesharing/model/FileEntity.class
+com/example/filesharing/controller/FileController.class
+com/example/filesharing/FileSharingApplication.class
+com/example/filesharing/service/FileService.class
