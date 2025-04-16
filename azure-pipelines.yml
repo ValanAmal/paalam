@@ -10,13 +10,19 @@ pool:
   name: 'paalam'
 
 steps:
+- script: |
+    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    export PATH=$JAVA_HOME/bin:$PATH
+    echo "Using Java:"
+    java -version
+  displayName: 'Set JAVA_HOME to JDK 17'
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
+    javaHomeOption: 'Path'
+    jdkDirectory: '/usr/lib/jvm/java-17-openjdk-amd64'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
